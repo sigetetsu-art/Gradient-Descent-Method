@@ -3,7 +3,7 @@
 #include <fstream>
 using namespace std;
 
-constexpr double alpha = 0.50;
+constexpr double alpha = 0.384615;
 constexpr double initial_x = 1.0;
 constexpr double initial_y = 1.0;
 constexpr double threshold = 0.00001;
