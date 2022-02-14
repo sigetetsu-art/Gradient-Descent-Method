@@ -6,15 +6,15 @@ using namespace std;
 constexpr double initial_x = 1.0;
 constexpr double initial_y = 1.0;
 constexpr double threshold = 0.00001;
-constexpr double raito = 0.40;//raito:係数の減衰比率
-constexpr double coeff = 0.001;
+constexpr double raito = 0.40;//raito:係数αの減衰比率
+constexpr double coeff = 0.001;//c1 傾きの減少量
 
 struct grad{
     double x_grad;
     double y_grad;
 };
 
-auto func(double x, double y){
+inline auto func(double x, double y){
     return x * x + y * y + x * y - 2 * x;
 }
 
@@ -22,9 +22,14 @@ inline auto calc_grad(double x, double y)-> grad {
     return {2 * x + y - 2, 2 * y + x};
 }
 
+inline auto calc_grad_norm(grad grad){
+    return sqrt(grad.x_grad * grad.x_grad + grad.y_grad * grad.y_grad);
+}
+
 inline auto Armijo_line_serch(double x, double y, grad grad, double alpha, double coeff, double raito){
     for(int i = 0; i< 10; i++){
-        if(func(x - grad.x_grad * alpha, y - grad.y_grad * alpha) <= func(x, y) + alpha * coeff * (grad.x_grad * grad.x_grad + grad.y_grad * grad.y_grad) ) break;
+        if((func(x - grad.x_grad * alpha, y - grad.y_grad * alpha) <= func(x, y) - coeff * alpha * grad.x_grad * calc_grad_norm(grad)) &&
+                            (func(x - grad.x_grad * alpha, y - grad.y_grad * alpha) <= func(x, y) - coeff * alpha * grad.y_grad * calc_grad_norm(grad))) break;
         else alpha = raito * alpha;
     }
     return alpha;
