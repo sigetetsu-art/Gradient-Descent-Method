@@ -28,8 +28,7 @@ inline auto calc_grad_norm(grad grad){
 
 inline auto Armijo_line_serch(double x, double y, grad grad, double alpha, double coeff, double raito){
     for(int i = 0; i< 10; i++){
-        if((func(x - grad.x_grad * alpha, y - grad.y_grad * alpha) <= func(x, y) - coeff * alpha * grad.x_grad * calc_grad_norm(grad)) &&
-                            (func(x - grad.x_grad * alpha, y - grad.y_grad * alpha) <= func(x, y) - coeff * alpha * grad.y_grad * calc_grad_norm(grad))) break;
+        if(func(x - grad.x_grad * alpha, y - grad.y_grad * alpha) <= func(x, y) - coeff * alpha * (grad.x_grad * grad.x_grad + grad.y_grad * grad.y_grad)) break;
         else alpha = raito * alpha;
     }
     return alpha;
